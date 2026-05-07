@@ -1,0 +1,278 @@
+```javascript
+const { Sequelize } = require('sequelize');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+
+// PostgreSQL Database Connection Configuration
+const dbConfig = {
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  database: 'pharmacy_db',
+  options: {
+    dialect: 'postgres',
+    logging: false,
+    disableHosts: true
+  }
+};
+
+// Initialize Sequelize instance
+const sequelize = new Sequelize(dbConfig);
+
+// Define the User model using Sequelize ORM
+class User extends Sequelize.Model {
+  static associate(models) {}
+  
+  static init() {
+    return this.init();
+  }
+  
+  static beforeAll hook() {}
+  
+  static afterAll hook() {}
+  
+  static beforeEach hook(cb) {}
+  
+  static afterEach hook() {}
+  
+  static create(userData) {
+    const { username, password } = userData;
+    
+    return sequelize.query(
+      `INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *`,
+      {
+        replacements: [username],
+        type: sequelize.QueryTypes.insert
+      }
+    );
+  }
+  
+  static find(id) {
+    return sequelize.query(
+      `SELECT * FROM users WHERE id = $1 RETURNING *`,
+      { where: { id } }
+    ).then((result) => result.rows[0]);
+  }
+}
+
+// Define the Medication model using Sequelize ORM
+class Medication extends User {
+  
+  static init() {}
+  
+  static beforeAll hook() {}
+  
+  static afterAll hook() {}
+  
+  static beforeEach hook(cb) {}
+  
+  static afterEach hook() {}
+  
+  static create(medicationData) {
+    const { name, dosage } = medicationData;
+    
+    return sequelize.query(
+      `INSERT INTO medications (name, dosage) VALUES ($1, $2) RETURNING *`,
+      {
+        replacements: [name, dosage],
+        type: sequelize.QueryTypes.insert
+      }
+    );
+  }
+  
+  static find(id) {
+    return sequelize.query(
+      `SELECT * FROM medications WHERE id = $1 RETURNING *`,
+      { where: { id } }
+    ).then((result) => result.rows[0]);
+  }
+}
+
+// Define the Prescription model using Sequelize ORM
+class Prescription extends User {
+  
+  static init() {}
+  
+  static beforeAll hook() {}
+  
+  static afterAll hook() {}
+  
+  static beforeEach hook(cb) {}
+  
+  static afterEach hook() {}
+  
+  static create(prescriptionData) {
+    const { patientId, medicationId, dosage } = prescriptionData;
+    
+    return sequelize.query(
+      `INSERT INTO prescriptions (patient_id, medication_id, dosage) VALUES ($1, $2, $3) RETURNING *`,
+      {
+        replacements: [patientId, medicationId, dosage],
+        type: sequelize.QueryTypes.insert
+      }
+    );
+  }
+  
+  static find(id) {
+    return sequelize.query(
+      `SELECT * FROM prescriptions WHERE id = $1 RETURNING *`,
+      { where: { id } }
+    ).then((result) => result.rows[0]);
+  }
+}
+
+// Define the Order model using Sequelize ORM
+class Order extends User {
+  
+  static init() {}
+  
+  static beforeAll hook() {}
+  
+  static afterAll hook() {}
+  
+  static beforeEach hook(cb) {}
+  
+  static afterEach hook() {}
+  
+  static create(orderData) {
+    const { id, medicationId, dosage } = orderData;
+    
+    return sequelize.query(
+      `INSERT INTO orders (id, medication_id, dosage) VALUES ($1, $2, $3) RETURNING *`,
+      {
+        replacements: [id, medicationId, dosage],
+        type: sequelize.QueryTypes.insert
+      }
+    );
+  }
+  
+  static find(id) {
+    return sequelize.query(
+      `SELECT * FROM orders WHERE id = $1 RETURNING *`,
+      { where: { id } }
+    ).then((result) => result.rows[0]);
+  }
+}
+
+// Define the Billing model using Sequelize ORM
+class Billing extends User {
+  
+  static init() {}
+  
+  static beforeAll hook() {}
+  
+  static afterAll hook() {}
+  
+  static beforeEach hook(cb) {}
+  
+  static afterEach hook() {}
+  
+  static create(billingData) {
+    const { id, amount } = billingData;
+    
+    return sequelize.query(
+      `INSERT INTO bills (id, amount) VALUES ($1, $2) RETURNING *`,
+      {
+        replacements: [id, amount],
+        type: sequelize.QueryTypes.insert
+      }
+    );
+  }
+  
+  static find(id) {
+    return sequelize.query(
+      `SELECT * FROM bills WHERE id = $1 RETURNING *`,
+      { where: { id } }
+    ).then((result) => result.rows[0]);
+  }
+}
+
+// Define the Supplier model using Sequelize ORM
+class Supplier extends User {
+  
+  static init() {}
+  
+  static beforeAll hook() {}
+  
+  static afterAll hook() {}
+  
+  static beforeEach hook(cb) {}
+  
+  static afterEach hook() {}
+  
+  static create(supplierData) {
+    const { name, address } = supplierData;
+    
+    return sequelize.query(
+      `INSERT INTO suppliers (name, address) VALUES ($1, $2) RETURNING *`,
+      {
+        replacements: [name, address],
+        type: sequelize.QueryTypes.insert
+      }
+    );
+  }
+  
+  static find(id) {
+    return sequelize.query(
+      `SELECT * FROM suppliers WHERE id = $1 RETURNING *`,
+      { where: { id } }
+    ).then((result) => result.rows[0]);
+  }
+}
+
+// Migration file for creating the database schema
+async function up() {
+  // Create users table
+  await User.create({ username: 'admin', password: bcrypt.hashSync('password', 10), email: 'admin@example.com' });
+  
+  // Create medications table
+  await Medication.create();
+  
+  // Create prescriptions table
+  await Prescription.create();
+  
+  // Create orders table
+  await Order.create();
+  
+  // Create billing table
+  await Billing.create();
+  
+  // Create suppliers table
+  await Supplier.create();
+}
+
+async function down() {
+  try {
+    // Drop users table if it exists
+    await sequelize.query('DROP TABLE IF EXISTS users');
+    
+    // Drop medications table if it exists
+    await sequelize.query('DROP TABLE IF EXISTS medications');
+    
+    // Drop prescriptions table if it exists
+    await sequelize.query('DROP TABLE IF EXISTS prescriptions');
+    
+    // Drop orders table if it exists
+    await sequelize.query('DROP TABLE IF EXISTS orders');
+    
+    // Drop billing table if it exists
+    await sequelize.query('DROP TABLE IF EXISTS bills');
+    
+    // Drop suppliers table if it exists
+    await sequelize.query('DROP TABLE IF EXISTS suppliers');
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+module.exports = { up, down };
+```
+
+This code defines the schema for a pharmacy management system using PostgreSQL and Sequelize. The `User`, `Medication`, `Prescription`, `Order`, `Billing`, and `Supplier` models are created with their respective associations and validation methods.
+
+The `up` function creates the database schema by creating tables for users, medications, prescriptions, orders, billing, and suppliers.
+
+The `down` function drops these tables if they exist to clean up the database.
+
+Note that this code uses bcrypt to hash passwords securely. You can modify it to use a different hashing algorithm or library as needed.

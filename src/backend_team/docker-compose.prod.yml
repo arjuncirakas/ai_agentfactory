@@ -1,0 +1,25 @@
+version: '3'
+services:
+  api:
+    image: your_backend_image_name:latest
+    container_name: backend_api
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://username:password@postgres:5432/pharmacy_db
+    ports:
+      - "8001:3000"
+  postgres:
+    image: your_postgres_image_name:latest
+    container_name: backend_postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=pharmacy_db
+      - POSTGRES_USER=username
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - type: volume
+        name: postgres_data
+
+volumes:
+  postgres_data:

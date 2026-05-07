@@ -1,0 +1,37 @@
+[
+  {
+    "path": "src/_manifest_fallback/backend_team_note.md",
+    "description": "Notes for the backend team regarding containerization and deployment process.",
+    "language": "markdown"
+  },
+  {
+    "path": "src/contracts/Dockerfile",
+    "description": "Dockerfile to create a Docker image for backend services.",
+    "language": "dockerfile"
+  },
+  {
+    "path": "src/docker-compose.yml",
+    "description": "YAML file for defining and running multiple containers and services in a Docker environment.",
+    "language": "yaml"
+  },
+  {
+    "path": "src/_manifest_fallback/docker-compose.override.yml",
+    "description": "YAML file to override default settings defined in docker-compose.yml for specific environments or configurations.",
+    "language": "yaml"
+  },
+  {
+    "path": "src/backend_team/.github/workflows/ci.yml",
+    "description": "GitHub Actions workflow file for CI (Continuous Integration) - runs tests and builds backend Docker image.",
+    "language": "yaml"
+  },
+  {
+    "path": "src/backend_team/.github/workflows/deploy.yml",
+    "description": "GitHub Actions workflow file for CD (Continuous Deployment) - deploys the latest built Docker image to a target environment.",
+    "language": "yaml"
+  },
+  {
+    "path": "src/backend_team/docker-compose.prod.yml",
+    "description": "YAML file defining services and volumes for production deployment in docker-compose.yml with overrides for specific configurations or settings.",
+    "language": "yaml"
+  }
+]

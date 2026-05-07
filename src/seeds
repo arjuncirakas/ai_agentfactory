@@ -1,0 +1,73 @@
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = new Sequelize('pharmacy_db', 'postgres', 'postgres', {
+  host: 'localhost',
+  dialect: 'postgres',
+  logging: false,
+});
+
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+const db = require('../services/api');
+const pharmacyService = require('../services/pharmacyService');
+
+async function seed() {
+  try {
+    await sequelize.authenticate();
+    console.log('Database connection established.');
+
+    // Create tables if they don't exist
+    await sequelize.sync({ force: true });
+    console.log('Tables created or synchronized.');
+
+    // Seed users
+    const hashedPassword = await bcrypt.hash('password123', 10);
+    const user = await db.User.create({
+      name: 'John Doe',
+      email: 'john@example.com',
+      password: hashedPassword,
+      role: 'admin',
+    });
+
+    // Seed pharmacies
+    const pharmacy = await db.Pharmacy.create({
+      name: 'Example Pharmacy',
+      address: '123 Main St',
+      city: 'Anytown',
+      state: 'CA',
+      zip: '12345',
+    });
+
+    // Seed medications
+    const medication = await db.Medication.create({
+      name: 'Acetaminophen',
+      description: 'Pain reliever',
+      price: 10.99,
+    });
+
+    // Seed patients
+    const patient = await db.Patient.create({
+      name: 'Jane Doe',
+      email: 'jane@example.com',
+      dateOfBirth: '1990-01-01',
+      address: '456 Elm St',
+      city: 'Anytown',
+      state: 'CA',
+      zip: '12345',
+    });
+
+    // Seed prescriptions
+    const prescription = await db.Prescription.create({
+      patientId: patient.id,
+      medicationId: medication.id,
+      dosage: '2 tablets per day',
+      refillLimit: 5,
+    });
+
+    console.log('Seeding complete.');
+  } catch (error) {
+    console.error('Error seeding database:', error);
+  }
+}
+
+seed();

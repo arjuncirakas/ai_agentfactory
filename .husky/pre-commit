@@ -1,0 +1,28 @@
+#!/usr/bin/env sh
+
+echo "========================================"
+echo "  CODE QUALITY POLICE — PRE-COMMIT"
+echo "========================================"
+
+echo "Running ESLint complexity check..."
+npx eslint src/ --max-warnings 0
+ESLINT_EXIT=$?
+
+echo "Running TypeScript type check..."
+npx tsc --noEmit
+TSC_EXIT=$?
+
+if [ $ESLINT_EXIT -ne 0 ]; then
+  echo "❌ ESLint failed. Fix complexity violations before committing."
+  echo "   Max allowed complexity: 10"
+  echo "   Run: npm run lint"
+  exit 1
+fi
+
+if [ $TSC_EXIT -ne 0 ]; then
+  echo "❌ TypeScript check failed. Fix type errors before committing."
+  echo "   Run: npm run typecheck"
+  exit 1
+fi
+
+echo "✅ All quality checks passed. Committing..."

@@ -1,0 +1,37 @@
+[
+  {
+    "path": "src/components/App.js",
+    "description": "Defines the main application component",
+    "language": "javascript"
+  },
+  {
+    "path": "src/components/PharmacyList.js",
+    "description": "Renders a list of pharmacies",
+    "language": "javascript"
+  },
+  {
+    "path": "src/components/PharmacyDetail.js",
+    "description": "Displays details of a single pharmacy",
+    "language": "javascript"
+  },
+  {
+    "path": "src/services/api.js",
+    "description": "Handles API requests to the backend",
+    "language": "javascript"
+  },
+  {
+    "path": "src/services/pharmacyService.js",
+    "description": "Provides pharmacy data to components",
+    "language": "javascript"
+  },
+  {
+    "path": "src/index.js",
+    "description": "Entry point of the React application",
+    "language": "javascript"
+  },
+  {
+    "path": "src/utils/constants.js",
+    "description": "Defines application-wide constants",
+    "language": "javascript"
+  }
+]

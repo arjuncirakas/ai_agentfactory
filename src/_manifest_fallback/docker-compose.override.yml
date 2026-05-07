@@ -1,0 +1,13 @@
+```yaml
+version: '3'
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: pharmacyuser
+      POSTGRES_PASSWORD: examplepassword
+      POSTGRES_DB: pharmacydb
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d
+```
+Note that this file is a basic configuration for the PostgreSQL database service. You may need to customize it further based on your specific requirements and configurations.

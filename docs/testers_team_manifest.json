@@ -1,0 +1,7 @@
+[
+  {
+    "path": "src/_manifest_fallback/testers_team_note.md",
+    "description": "Fallback note created because the manifest JSON could not be parsed.",
+    "language": "markdown"
+  }
+]

@@ -1,0 +1,164 @@
+asyncapi: 2.6.0
+info:
+  title: Pharmacy Management System
+  description: A comprehensive platform for pharmacy operations
+version: 1.0.0
+type: project
+description: Project definition for the pharmacy management system
+contact:
+  email: support@example.com
+  url: https://www.example.com
+servers:
+- url: http://localhost:8080
+paths:
+  /patient_records:
+    get:
+      summary: Retrieve patient records
+      responses:
+        200:
+          description: Patient records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/PatientRecord'
+  /prescriptions:
+    get:
+      summary: Retrieve prescriptions
+      responses:
+        200:
+          description: Prescriptions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/PrescriptionForm'
+  /inventory:
+    get:
+      summary: Retrieve inventory data
+      responses:
+        200:
+          description: Inventory data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_inventory:
+                    type: integer
+                  current_low_stock:
+                    type: integer
+
+components:
+  PatientRecord:
+    summary: Displays patient record details
+    description: A component that displays patient record details
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/Patient'
+
+  PrescriptionForm:
+    summary: Handles prescription form submission
+    description: A component that handles prescription form submission
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              patientName:
+                type: string
+
+  InventoryTable:
+    summary: Displays inventory data
+    description: A component that displays inventory data
+    responses:
+      200:
+        description: Inventory data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/Inventory'
+
+  PatientController:
+    summary: Handles patient record API requests
+    description: A controller for handling patient record API requests
+    parameters:
+      - in: query
+        name: patientId
+        required: true
+        description: The ID of the patient to retrieve
+        schema:
+          type: string
+
+  PrescriptionController:
+    summary: Handles prescription API requests
+    description: A controller for handling prescription API requests
+    parameters:
+      - in: query
+        name: patientName
+        required: false
+        description: The name of the patient to retrieve
+        schema:
+          type: string
+
+  InventoryController:
+    summary: Handles inventory API requests
+    description: A controller for handling inventory API requests
+    parameters:
+      - in: query
+        name: productIds
+        required: true
+        description: An array of product IDs to retrieve
+        schema:
+          type: array
+          items:
+            $ref: '#/components/Inventory'
+
+services:
+  PatientService:
+    summary: Provides patient record data access
+    description: A service for providing patient record data
+    queries:
+      - name: getPatientRecords
+        description: Retrieves patient records
+        responseSchema:
+          type: array
+          items:
+            $ref: '#/components/PatientRecord'
+      - name: getPrescriptionsForPatient
+        description: Retrieves prescriptions for a patient
+        responseSchema:
+          type: array
+          items:
+            $ref: '#/components/PrescriptionForm'
+
+  PrescriptionService:
+    summary: Provides prescription data access
+    description: A service for providing prescription data
+    queries:
+      - name: getPrescriptions
+        description: Retrieves prescriptions
+        responseSchema:
+          type: array
+          items:
+            $ref: '#/components/PrescriptionForm'
+      - name: getPrescriptionForPatient
+        description: Retrieves a prescription for a patient
+        responseSchema:
+          type: object
+
+  InventoryService:
+    summary: Provides inventory data access
+    description: A service for providing inventory data
+    queries:
+      - name: getInventoryData
+        description: Retrieves inventory data
+        responseSchema:
+          type: object

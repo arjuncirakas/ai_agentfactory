@@ -1,0 +1,218 @@
+openapi: 3.0.0
+info:
+  title: Pharmacy Management System API
+  description: API endpoint for managing prescriptions, patient records, and inventory.
+  version: 1.0.0
+servers:
+- url: http://localhost:8080
+
+paths:
+  /patients:
+    get:
+      summary: Get list of patients
+      responses:
+        200:
+          description: List of patients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Patient'
+
+  /patients/{id}:
+    get:
+      summary: Get patient details by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Patient details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+
+  /prescriptions:
+    get:
+      summary: Get list of prescriptions
+      responses:
+        200:
+          description: List of prescriptions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Prescription'
+
+  /prescriptions/{id}:
+    get:
+      summary: Get prescription details by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Prescription details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prescription'
+
+  /inventory:
+    get:
+      summary: Get inventory data
+      responses:
+        200:
+          description: Inventory data
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /inventory/{id}:
+    get:
+      summary: Get inventory details by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Inventory details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inventory'
+
+components:
+  schemas:
+    Patient:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique patient ID
+        name:
+          type: string
+          description: Patient name
+        contact_details:
+          type: string
+          description: Patient contact details
+        date_of_birth:
+          type: string
+          format: date
+          description: Patient date of birth
+        medical_history:
+          type: string
+          description: Patient medical history
+        allergies:
+          type: string
+          description: Patient allergies
+        current_prescriptions:
+          type: string
+          description: Patient current prescriptions
+
+    Prescription:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique prescription ID
+        patient_id:
+          type: integer
+          description: Foreign key referencing the patients table
+        prescription_date:
+          type: date
+          format: date
+          description: Prescription date
+        prescription_type:
+          type: string
+          description: Prescription type (e.g. medication, procedure)
+
+    Inventory:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique inventory ID
+        name:
+          type: string
+          description: Inventory name
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+
+  components:
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique product ID
+        name:
+          type: string
+          description: Product name
+        products_supplied:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+
+securitySchemes:
+  authentication:
+    type:apiKey
+    name: auth
+    in: header
+    scheme:Bearer
+
+interceptors:
+- type: ResponseInterceptor
+  request:
+    params:
+      - name: auth
+        schema:
+          type: string
+          format: true
+  response:
+    body:
+      $ref: '#/components/schemas/Response'
+
+responses:
+  401:
+    description: Unauthorized
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/Error'
+
+  403:
+    description: Forbidden
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/Error'
+
+  404:
+    description: Not Found
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/Error'
+
+  500:
+    description: Internal Server Error
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/Error'
